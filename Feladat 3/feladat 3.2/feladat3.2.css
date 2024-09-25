@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 80%; /* Set a specific width */
+  margin: 20px auto; /* Center the container */
+}
+
+.top-bar {
+  display: flex;
+  background-color: purple;
+  padding: 10px;
+  width: 100%;
+}
+
+.box1 {
+  margin-left: 7.5%;
+}
+
+.box {
+  width: 100px;
+  height: 30px;
+  background-color: cyan;
+  margin-right: 10px;
+}
+
+.main {
+  margin-top: -10px;
+  display: flex;
+}
+
+.left {
+  flex: 1;
+  background-color: green;
+  height: 300px; /* Set a specific height */
+  margin-right: 10px;
+}
+
+.right {
+  flex: 3;
+  background-color: yellow;
+  height: 300px; /* Set the same height as the left */
+}
+
+.footer {
+  background-color: gray;
+  height: 50px;
+  margin-top: -10px; /* Add spacing between main section and footer */
+}

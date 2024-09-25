@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 70%; 
+  margin: 30px auto; 
+}
+
+.top-bar {
+  display: flex;
+  background-color: purple;
+  padding: 10px;
+}
+
+.box {
+  width: 100px;
+  height: 30px;
+  background-color: cyan;
+  margin-right: 10px;
+}
+
+.main {
+  display: flex;
+}
+
+.left {
+  flex: 3;
+  background-color: yellow;
+  height: 300px; 
+}
+
+.right {
+  flex: 1;
+  background-color: green;
+  height: 300px; 
+}

@@ -1,0 +1,47 @@
+.container3-1 {
+  width: 100%;
+  height:  400px;
+}
+.container3-2 {
+  width: 20%;
+  height:  350px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+.container3-3 {
+  flex: 4;
+  display: flex;
+  gap: 1rem;
+}
+.blue {
+  background-color: aqua;
+  flex: 1;
+}
+.darkblue {
+  background-color: blue;
+  flex: 1;
+}
+.orange {
+  background-color: orange;
+  order: 1;
+  flex: 1;
+
+}
+.red {
+  background-color: red;
+  order: 2;
+  flex: 4;
+}
+.purple {
+  background-color: purple;
+  flex: 1;
+  order: 3;
+}
+.black {
+  background-color: black;
+  width: 25px;
+  height: 25px;
+  float: right;
+  margin-right: 5%;
+}
