@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tic Tac Toe</h1>
+        <div class="game-mode">
+          <button id="player-vs-player">Play vs Player</button>
+          <button id="player-vs-computer">Play vs Computer</button>
+        </div>
+        <div class="game-board" id="game-board"></div>
+        <button id="reset-btn" class="reset-btn">Restart Game</button>
+        <div id="game-over-modal" class="modal">
+          <div class="modal-content">
+            <h2 id="game-over-message"></h2>
+            <button id="close-modal-btn" class="reset-btn">Close</button>
+          </div>
+        </div>
+      </div>
+      
+  <script>
+    const gameBoard = document.getElementById('game-board');
+    const resetButton = document.getElementById('reset-btn');
+    const playerVsPlayerButton = document.getElementById('player-vs-player');
+    const playerVsComputerButton = document.getElementById('player-vs-computer');
+    const modal = document.getElementById('game-over-modal');
+    const closeModalButton = document.getElementById('close-modal-btn');
+    const gameOverMessage = document.getElementById('game-over-message');
+
+    let board = [];
+    let currentPlayer = 'X';
+    let gameMode = null;
+    let isGameOver = false;
+
+    function createBoard() {
+      board = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+      ];
+      gameBoard.innerHTML = '';
+      isGameOver = false;
+
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.dataset.index = i;
+        cell.addEventListener('click', handleClick);
+        gameBoard.appendChild(cell);
+      }
+    }
+
+    function handleClick(event) {
+      if (isGameOver) return;
+
+      const index = event.target.dataset.index;
+      const row = Math.floor(index / 3);
+      const col = index % 3;
+
+      if (board[row][col] !== '') return;
+
+      board[row][col] = currentPlayer;
+      event.target.textContent = currentPlayer;
+
+      if (checkWinner()) {
+        showGameOverMessage(`${currentPlayer} wins!`);
+        isGameOver = true;
+        return;
+      }
+
+      if (isBoardFull()) {
+        showGameOverMessage("It's a draw!");
+        isGameOver = true;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+      if (gameMode === 'computer' && currentPlayer === 'O') {
+        setTimeout(computerMove, 500);
+      }
+    }
+
+    function checkWinner() {
+      const winningCombination = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      for (let combo of winningCombination) {
+        const [a, b, c] = combo;
+        const rowA = Math.floor(a / 3);
+        const colA = a % 3;
+        const rowB = Math.floor(b / 3);
+        const colB = b % 3;
+        const rowC = Math.floor(c / 3);
+        const colC = c % 3;
+
+        if (board[rowA][colA] === board[rowB][colB] && board[rowB][colB] === board[rowC][colC] && board[rowA][colA] !== '') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function minimax(board, depth, isMaximizing) {
+      const winner = checkWinnerFromBoard(board);
+      if (winner === 'X') return -10;
+      if (winner === 'O') return 10;
+      if (isBoardFull(board)) return 0;
+
+      if (isMaximizing) {
+        let best = -Infinity;
+        for (let i = 0; i < 9; i++) {
+          const row = Math.floor(i / 3);
+          const col = i % 3;
+          if (board[row][col] === '') {
+            board[row][col] = 'O';
+            best = Math.max(best, minimax(board, depth + 1, false));
+            board[row][col] = '';
+          }
+        }
+        return best;
+      } else {
+        let best = Infinity;
+        for (let i = 0; i < 9; i++) {
+          const row = Math.floor(i / 3);
+          const col = i % 3;
+          if (board[row][col] === '') {
+            board[row][col] = 'X';
+            best = Math.min(best, minimax(board, depth + 1, true));
+            board[row][col] = '';
+          }
+        }
+        return best;
+      }
+    }
+
+    function isBoardFull() {
+      return board.every(row => row.every(cell => cell !== ''));
+    }
+
+    function checkWinnerFromBoard(board) {
+      const winningCombination = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      for (let combo of winningCombination) {
+        const [a, b, c] = combo;
+        if (board[Math.floor(a / 3)][a % 3] === board[Math.floor(b / 3)][b % 3] && board[Math.floor(b / 3)][b % 3] === board[Math.floor(c / 3)][c % 3] && board[Math.floor(a / 3)][a % 3] !== '') {
+          return board[Math.floor(a / 3)][a % 3];
+        }
+      }
+      return null;
+    }
+
+    function computerMove() {
+      let bestMove = null;
+      let bestValue = -Infinity;
+
+      for (let i = 0; i < 9; i++) {
+        const row = Math.floor(i / 3);
+        const col = i % 3;
+        if (board[row][col] === '') {
+          board[row][col] = 'O';
+          const moveValue = minimax(board, 0, false);
+          board[row][col] = '';
+
+          if (moveValue > bestValue) {
+            bestValue = moveValue;
+            bestMove = i;
+          }
+        }
+      }
+
+      const row = Math.floor(bestMove / 3);
+      const col = bestMove % 3;
+      board[row][col] = 'O';
+
+      const cell = document.querySelector(`[data-index="${bestMove}"]`);
+      cell.textContent = 'O';
+
+      if (checkWinner()) {
+        showGameOverMessage('Computer wins!');
+        isGameOver = true;
+      } else if (isBoardFull()) {
+        showGameOverMessage("It's a draw!");
+        isGameOver = true;
+      } else {
+        currentPlayer = 'X';
+      }
+    }
+
+    function showGameOverMessage(message) {
+      gameOverMessage.textContent = message;
+      modal.style.display = 'flex';
+    }
+
+    closeModalButton.addEventListener('click', () => {
+      modal.style.display = 'none';
+      createBoard();
+    });
+
+    resetButton.addEventListener('click', () => {
+      createBoard();
+    });
+
+    playerVsPlayerButton.addEventListener('click', () => {
+      gameMode = 'player';
+      createBoard();
+    });
+
+    playerVsComputerButton.addEventListener('click', () => {
+      gameMode = 'computer';
+      createBoard();
+    });
+    createBoard();
+  </script>
+</body>
+</html>
