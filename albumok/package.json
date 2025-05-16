@@ -1,5 +1,5 @@
 {
-  "name": "albumok",
+  "name": "beadando-04-29-ig",
   "version": "1.0.0",
   "main": "app.js",
   "type": "module",
@@ -17,7 +17,7 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.10"
   },
   "description": ""
 }
